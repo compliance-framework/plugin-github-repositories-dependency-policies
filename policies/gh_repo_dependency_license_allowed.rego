@@ -32,7 +32,7 @@ skip_reason := "Dependency health is not observable, so dependency license accep
 risk_templates := [{
 	"name": "Direct dependency has unacceptable or unknown license",
 	"title": "Dependency License Creates Legal or Distribution Risk",
-	"statement": "dependency {{ .dependency }} contains a banned, unknown, or non-allow-listed license can create legal, commercial, or redistribution risk for the product. License uncertainty also weakens the evidence needed to demonstrate third-party component due diligence.",
+	"statement": "Dependency {{ .dependency }} that contains a banned, unknown, or non-allow-listed license can create legal, commercial, or redistribution risk for the product. License uncertainty also weakens the evidence needed to demonstrate third-party component due diligence.",
 	"likelihood_hint": "moderate",
 	"impact_hint": "high",
 	"violation_ids": ["dependency_banned_license", "dependency_license_not_allowed", "dependency_license_unknown"],
@@ -61,7 +61,7 @@ violation[{"id": "dependency_banned_license", "remarks": remarks}] if {
 	dep := dependencies[_]
 	evaluable_dependency(dep)
 	spdx := dependency_license_spdx(dep)
-	spdx != ""
+	not unknown_license_spdx(spdx)
 	license_in_list(spdx, banned_licenses)
 	remarks := sprintf("Direct dependency %q at version %q uses banned license %q for upstream repository %q. Configured banned licenses: %s.", [dependency_name(dep), dependency_version(dep), spdx, dependency_url(dep), concat(", ", banned_licenses)])
 }
@@ -70,7 +70,7 @@ violation[{"id": "dependency_license_not_allowed", "remarks": remarks}] if {
 	dep := dependencies[_]
 	evaluable_dependency(dep)
 	spdx := dependency_license_spdx(dep)
-	spdx != ""
+	not unknown_license_spdx(spdx)
 	not license_in_list(spdx, banned_licenses)
 	count(allowed_licenses) > 0
 	not license_in_list(spdx, allowed_licenses)
@@ -81,7 +81,8 @@ violation[{"id": "dependency_license_unknown", "remarks": remarks}] if {
 	dep := dependencies[_]
 	evaluable_dependency(dep)
 	license_collected(dep)
-	dependency_license_spdx(dep) == ""
+	spdx := dependency_license_spdx(dep)
+	unknown_license_spdx(spdx)
 	remarks := sprintf("Direct dependency %q at version %q has unknown collected license metadata for upstream repository %q.", [dependency_name(dep), dependency_version(dep), dependency_url(dep)])
 }
 
@@ -109,6 +110,18 @@ unobservable_dependency_health if {
 
 license_collected(dep) if {
 	object.get(dependency_license(dep), "collected", false) == true
+}
+
+unknown_license_spdx(spdx) if {
+	spdx == ""
+}
+
+unknown_license_spdx(spdx) if {
+	lower(spdx) == "unknown"
+}
+
+unknown_license_spdx(spdx) if {
+	lower(spdx) == "noassertion"
 }
 
 license_in_list(spdx, licenses) if {

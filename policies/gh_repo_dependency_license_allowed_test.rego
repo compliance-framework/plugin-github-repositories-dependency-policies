@@ -13,6 +13,8 @@ mit_dependency := object.union(base_dependency, {"supply_chain": {"license": {"s
 banned_dependency := object.union(base_dependency, {"supply_chain": {"license": {"spdx_id": "BUSL-1.1", "name": "Business Source License", "collected": true}}})
 
 unknown_license_dependency := object.union(base_dependency, {"supply_chain": {"license": {"spdx_id": "", "name": "Other", "collected": true}}})
+unknown_license_upper_dependency := object.union(base_dependency, {"supply_chain": {"license": {"spdx_id": "UNKNOWN", "name": "Other", "collected": true}}})
+unknown_license_noassertion_dependency := object.union(base_dependency, {"supply_chain": {"license": {"spdx_id": "NOASSERTION", "name": "Other", "collected": true}}})
 
 failed_license_collection_dependency := object.union(base_dependency, {"supply_chain": {"license": {"collected": false}}})
 
@@ -54,6 +56,22 @@ test_flags_license_not_in_configured_allow_list if {
 
 test_flags_unknown_collected_license if {
 	inp := {"dependencies": [unknown_license_dependency]}
+	violations := {v | violation[v] with input as inp}
+	count(violations) == 1
+	some v in violations
+	v.id == "dependency_license_unknown"
+}
+
+test_flags_unknown_uppercase_collected_license if {
+	inp := {"dependencies": [unknown_license_upper_dependency]}
+	violations := {v | violation[v] with input as inp}
+	count(violations) == 1
+	some v in violations
+	v.id == "dependency_license_unknown"
+}
+
+test_flags_noassertion_collected_license if {
+	inp := {"dependencies": [unknown_license_noassertion_dependency]}
 	violations := {v | violation[v] with input as inp}
 	count(violations) == 1
 	some v in violations

@@ -34,7 +34,7 @@ risk_templates := [
 	{
 		"name": "Direct dependency has stale upstream activity",
 		"title": "Dependency {{ .dependency }} contribution seems stale and may delay security fixes",
-		"statement": " The dependency {{.dependency}} has no recent release and no recent default-branch commit, which may indicate reduced upstream maintenance. Reduced maintenance can delay security fixes, compatibility updates, and review of reported defects.",
+		"statement": "Dependency {{ .dependency }} has no recent release and no recent default-branch commit, which may indicate reduced upstream maintenance. Reduced maintenance can delay security fixes, compatibility updates, and review of reported defects.",
 		"likelihood_hint": "moderate",
 		"impact_hint": "moderate",
 		"violation_ids": ["dependency_activity_stale"],

@@ -56,7 +56,10 @@ When `input.dependency` is present, it is treated as the dependency being evalua
 
 Generated evidence for granular dependency evaluation should include a `dependency` label whose value is the dependency name or stable dependency identifier, for example `dependency=github.com/example/lib`. Every risk template in this bundle declares `dedupe_label_keys: ["dependency"]`, so risks are tracked separately per dependency instead of one shared risk per policy.
 
-Specific dependency health policies only evaluate a dependency when `dependency.repository.resolved` is `true` and `dependency.collection_status.health_collected` is `true`. If dependency health is not observable, those policies return `skip_reason` instead of failing evidence, and the `dependency_health_unknown` policy is responsible for reporting the visibility gap.
+Specific dependency health policies primarily evaluate a dependency when `dependency.repository.resolved` is `true` and `dependency.collection_status.health_collected` is `true`.
+If `dependency.repository.resolved` is missing, policies treat `dependency.collection_status.repository_resolved` as a deprecated legacy alias.
+For policy gate checks, `dependency.repository.resolved` remains the canonical source of truth.
+`dependency_health_unknown` reports visibility gaps when either repository resolution or health collection is unavailable.
 
 The compatibility collection shape is:
 

@@ -21,7 +21,7 @@ skip_reason := "Dependency health is not observable, so archived repository stat
 
 risk_templates := [{
 	"name": "Direct dependency uses archived upstream repository",
-	"title": "Archived Dependency {{ .dependency }} Stop Receiving Security Maintenance",
+	"title": "Archived Dependency {{ .dependency }} Stops Receiving Security Maintenance",
 	"statement": "Dependency {{ .dependency }} is archived and may no longer receive bug fixes, security patches, or maintainer review. Continued use increases the risk that known or future vulnerabilities remain unresolved in the product's dependency chain.",
 	"likelihood_hint": "moderate",
 	"impact_hint": "high",

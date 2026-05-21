@@ -16,7 +16,16 @@ default dependency_health_input := {}
 dependency_health_input := object_or_empty(data.dependency_health) if {
 	is_object(data.dependency_health)
 }
-require_dependency_sbom := object.get(dependency_health_input, "require_dependency_sbom", false)
+require_dependency_sbom_raw := object.get(dependency_health_input, "require_dependency_sbom", false)
+default require_dependency_sbom := false
+
+require_dependency_sbom := true if {
+	require_dependency_sbom_raw == true
+}
+
+require_dependency_sbom := true if {
+	require_dependency_sbom_raw == "true"
+}
 
 title := "Direct dependency repository exposes SBOM evidence"
 

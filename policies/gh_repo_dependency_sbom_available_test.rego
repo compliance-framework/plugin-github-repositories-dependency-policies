@@ -39,6 +39,16 @@ test_flags_absent_required_sbom if {
 	v.id == "dependency_sbom_absent"
 }
 
+test_flags_absent_required_sbom_when_require_dependency_sbom_is_string_true if {
+	inp := {
+		"dependencies": [absent_sbom_dependency],
+	}
+	violations := {v | violation[v] with input as inp with data.dependency_health as {"require_dependency_sbom": "true"}}
+	count(violations) == 1
+	some v in violations
+	v.id == "dependency_sbom_absent"
+}
+
 test_flags_granular_dependency_without_direct_flag if {
 	dep := object.remove(absent_sbom_dependency, {"direct"})
 	inp := {
