@@ -1,19 +1,12 @@
 package compliance_framework.dependency_health_unknown
 
-dependencies := [dep] if {
-	dep := object.get(input, "dependency", null)
-	is_object(dep)
-}
+import data.compliance_framework.dependency_helpers as dependency_helpers
 
-dependencies := deps if {
-	dep := object.get(input, "dependency", null)
-	not is_object(dep)
-	deps := array_or_empty(object.get(input, "dependencies", []))
-}
+dependencies := dependency_helpers.selected_dependencies(input)
 
 default dependency_health_input := {}
 
-dependency_health_input := object_or_empty(data.dependency_health) if {
+dependency_health_input := dependency_helpers.object_or_empty(data.dependency_health) if {
 	is_object(data.dependency_health)
 }
 unknown_health_is_violation := object.get(dependency_health_input, "unknown_health_is_violation", false)
@@ -94,13 +87,13 @@ health_collected(dep) if {
 }
 
 collection_error_summary(dep) := summary if {
-	errors := array_or_empty(object.get(dependency_collection_status(dep), "errors", []))
+	errors := dependency_helpers.array_or_empty(object.get(dependency_collection_status(dep), "errors", []))
 	count(errors) > 0
 	summary := concat("; ", [error_message(error) | error := errors[_]])
 }
 
 collection_error_summary(dep) := "no collection error detail was provided" if {
-	errors := array_or_empty(object.get(dependency_collection_status(dep), "errors", []))
+	errors := dependency_helpers.array_or_empty(object.get(dependency_collection_status(dep), "errors", []))
 	count(errors) == 0
 }
 
@@ -111,55 +104,19 @@ error_message(error) := msg if {
 }
 
 direct_dependency(dep) if {
-	input_dependency_provided
-}
-
-direct_dependency(dep) if {
-	not input_dependency_provided
-	object.get(dep, "direct", false) == true
-}
-
-input_dependency_provided if {
-	is_object(object.get(input, "dependency", null))
+	dependency_helpers.direct_dependency(input, dep)
 }
 
 repository_resolved(dep) if {
-	repository := dependency_repository(dep)
-	object.get(repository, "resolved", "__repository_resolved_missing__") == true
+	dependency_helpers.repository_resolved(dep)
 }
 
-repository_resolved(dep) if {
-	repository := dependency_repository(dep)
-	object.get(repository, "resolved", "__repository_resolved_missing__") == "__repository_resolved_missing__"
-	object.get(dependency_collection_status(dep), "repository_resolved", false) == true
-}
+dependency_repository(dep) := dependency_helpers.dependency_repository(dep)
 
-dependency_repository(dep) := repo if {
-	repo := object_or_empty(object.get(dep, "repository", {}))
-}
+dependency_collection_status(dep) := dependency_helpers.dependency_collection_status(dep)
 
-dependency_collection_status(dep) := status if {
-	status := object_or_empty(object.get(dep, "collection_status", {}))
-}
+dependency_name(dep) := dependency_helpers.dependency_name(dep)
 
-object_or_empty(value) := value if {
-	is_object(value)
-}
+dependency_version(dep) := dependency_helpers.dependency_version(dep)
 
-object_or_empty(value) := {} if {
-	not is_object(value)
-}
-
-array_or_empty(value) := value if {
-	is_array(value)
-}
-
-array_or_empty(value) := [] if {
-	not is_array(value)
-}
-
-dependency_name(dep) := object.get(dep, "name", "unknown")
-
-dependency_version(dep) := object.get(dep, "declared_version", "unknown")
-
-dependency_url(dep) := object.get(dependency_repository(dep), "url", "unknown")
+dependency_url(dep) := dependency_helpers.dependency_url(dep)
