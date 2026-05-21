@@ -72,7 +72,11 @@ pr_open_count(dep) := object.get(dependency_pull_requests(dep), "open_count", 0)
 
 oldest_open_pr_age_days(dep) := floor((current_time_ns - time.parse_rfc3339_ns(ts)) / nano_per_day) if {
 	ts := object.get(dependency_pull_requests(dep), "oldest_open_created_at", "")
-	ts != ""
+	valid_rfc3339(ts)
+}
+
+valid_rfc3339(ts) if {
+	regex.match(`^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$`, ts)
 }
 
 pr_median_days_to_close(dep) := object.get(dependency_pull_requests(dep), "median_days_to_close", 0)

@@ -96,21 +96,29 @@ violation[{"id": "dependency_has_no_activity_signal", "remarks": remarks}] if {
 release_is_stale(dep) if {
 	ts := release_published_at(dep)
 	ts != ""
+	valid_rfc3339(ts)
 	age_days(ts) > max_days_since_release
 }
 
 commit_is_stale(dep) if {
 	ts := commit_committed_at(dep)
 	ts != ""
+	valid_rfc3339(ts)
 	age_days(ts) > max_days_since_commit
 }
 
 has_release_signal(dep) if {
-	release_published_at(dep) != ""
+	ts := release_published_at(dep)
+	valid_rfc3339(ts)
 }
 
 has_commit_signal(dep) if {
-	commit_committed_at(dep) != ""
+	ts := commit_committed_at(dep)
+	valid_rfc3339(ts)
+}
+
+valid_rfc3339(ts) if {
+	regex.match(`^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$`, ts)
 }
 
 release_published_at(dep) := ts if {
@@ -123,7 +131,9 @@ commit_committed_at(dep) := ts if {
 	ts := object.get(latest_commit, "committed_at", "")
 }
 
-age_days(ts) := floor((current_time_ns - time.parse_rfc3339_ns(ts)) / nano_per_day)
+age_days(ts) := floor((current_time_ns - time.parse_rfc3339_ns(ts)) / nano_per_day) if {
+	valid_rfc3339(ts)
+}
 
 dependency_health_observable(dep) if {
 	direct_dependency(dep)
