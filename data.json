@@ -1,0 +1,15 @@
+{
+  "dependency_health": {
+    "max_days_since_release": 365,
+    "max_days_since_commit": 180,
+    "max_open_prs": 50,
+    "max_oldest_open_pr_age_days": 180,
+    "max_median_days_to_close_pr": 30,
+    "require_dependency_sbom": false,
+    "banned_licenses": ["BUSL-1.1", "SSPL-1.0", "PolyForm-Noncommercial-1.0.0"],
+    "allowed_licenses": [],
+    "unknown_health_is_violation": false
+  },
+  "workflow_names": [],
+  "environment_names": []
+}
