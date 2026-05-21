@@ -44,6 +44,15 @@ test_flags_granular_dependency_without_direct_flag if {
 	v.id == "dependency_banned_license"
 }
 
+test_flags_banned_license_when_resolved_is_legacy_alias if {
+	dep := object.union(banned_dependency, {"repository": {}, "collection_status": {"repository_resolved": true, "health_collected": true}})
+	inp := {"dependencies": [dep]}
+	violations := {v | violation[v] with input as inp}
+	count(violations) == 1
+	some v in violations
+	v.id == "dependency_banned_license"
+}
+
 test_flags_license_not_in_configured_allow_list if {
 	inp := {
 		"dependencies": [mit_dependency],

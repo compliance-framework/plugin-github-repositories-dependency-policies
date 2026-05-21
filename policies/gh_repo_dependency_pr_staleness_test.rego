@@ -74,6 +74,15 @@ test_skips_when_dependency_health_is_not_observable if {
 	skip_reason != "" with input as inp
 }
 
+test_flags_stale_pr_backlog_when_resolved_is_legacy_alias if {
+	dep := object.union(backlog_dependency, {"repository": {}, "collection_status": {"repository_resolved": true, "health_collected": true}})
+	inp := {"__now_ns": fixed_now_ns, "dependencies": [dep]}
+	violations := {v | violation[v] with input as inp}
+	count(violations) == 1
+	some v in violations
+	v.id == "dependency_open_pr_backlog_stale"
+}
+
 test_threshold_override_flags_smaller_backlog if {
 	dep := object.union(base_dependency, {"health": {"pull_requests": {"open_count": 6, "oldest_open_created_at": "2026-05-01T00:00:00Z", "median_days_to_close": 4}}})
 	inp := {

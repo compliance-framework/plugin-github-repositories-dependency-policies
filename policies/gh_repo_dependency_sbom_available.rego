@@ -124,7 +124,14 @@ input_dependency_provided if {
 }
 
 repository_resolved(dep) if {
-	object.get(dependency_repository(dep), "resolved", false) == true
+	repository := dependency_repository(dep)
+	object.get(repository, "resolved", "__repository_resolved_missing__") == true
+}
+
+repository_resolved(dep) if {
+	repository := dependency_repository(dep)
+	object.get(repository, "resolved", "__repository_resolved_missing__") == "__repository_resolved_missing__"
+	object.get(dependency_collection_status(dep), "repository_resolved", false) == true
 }
 
 health_collected(dep) if {

@@ -72,6 +72,15 @@ test_ignores_unresolved_dependency if {
 	count(violations) == 0
 }
 
+test_flags_stale_activity_when_resolved_is_legacy_alias if {
+	dep := object.union(stale_activity_dependency, {"repository": {}, "collection_status": {"repository_resolved": true, "health_collected": true}})
+	inp := {"__now_ns": fixed_now_ns, "dependencies": [dep]}
+	violations := {v | violation[v] with input as inp}
+	count(violations) == 1
+	some v in violations
+	v.id == "dependency_activity_stale"
+}
+
 test_skips_when_dependency_health_is_not_observable if {
 	dep := object.union(stale_activity_dependency, {"collection_status": {"health_collected": false}})
 	inp := {"__now_ns": fixed_now_ns, "dependencies": [dep]}

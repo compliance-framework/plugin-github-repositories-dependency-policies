@@ -24,6 +24,17 @@ description := "Direct dependency health should be observable enough to support 
 
 skip_reason := "Unknown dependency health is informational because policy data does not treat unknown health as a violation." if {
 	unknown_health_is_violation == false
+	dep := dependencies[_]
+	direct_dependency(dep)
+	not repository_resolved(dep)
+}
+
+skip_reason := "Unknown dependency health is informational because policy data does not treat unknown health as a violation." if {
+	unknown_health_is_violation == false
+	dep := dependencies[_]
+	direct_dependency(dep)
+	repository_resolved(dep)
+	not health_collected(dep)
 }
 
 risk_templates := [{
@@ -113,7 +124,14 @@ input_dependency_provided if {
 }
 
 repository_resolved(dep) if {
-	object.get(dependency_repository(dep), "resolved", false) == true
+	repository := dependency_repository(dep)
+	object.get(repository, "resolved", "__repository_resolved_missing__") == true
+}
+
+repository_resolved(dep) if {
+	repository := dependency_repository(dep)
+	object.get(repository, "resolved", "__repository_resolved_missing__") == "__repository_resolved_missing__"
+	object.get(dependency_collection_status(dep), "repository_resolved", false) == true
 }
 
 dependency_repository(dep) := repo if {
