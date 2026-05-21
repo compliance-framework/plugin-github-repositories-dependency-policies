@@ -90,6 +90,7 @@ When using `input.dependencies[]`, only dependencies with `direct: true` are eva
 ## Policy Data
 
 Thresholds are read from `data.dependency_health`.
+When using the built bundle, `data.json` is not included because `make build` runs `opa build -b policies`; load policy data as a separate data file in the OPA runtime (for example with an additional `-d data.json` argument).
 
 ```json
 {
@@ -120,4 +121,10 @@ Policies are built into a bundle for distribution:
 
 ```shell
 make build
+```
+
+When evaluating the bundle, pass the policy-data file explicitly:
+
+```shell
+opa eval -b dist/bundle.tar.gz -d data.json 'data'
 ```
