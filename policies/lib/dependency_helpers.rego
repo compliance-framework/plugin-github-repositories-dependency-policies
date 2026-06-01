@@ -1,4 +1,4 @@
-package compliance_framework.dependency_helpers
+package ccf_libs.dependency_helpers
 
 array_or_empty(value) := value if {
 	is_array(value)
