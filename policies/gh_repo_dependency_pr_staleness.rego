@@ -1,6 +1,6 @@
 package compliance_framework.dependency_pr_staleness
 
-import data.compliance_framework.dependency_helpers as dependency_helpers
+import data.ccf_libs.dependency_helpers as dependency_helpers
 
 dependencies := dependency_helpers.selected_dependencies(input)
 
