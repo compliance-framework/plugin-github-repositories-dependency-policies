@@ -1,0 +1,2 @@
+lisa-selfreview:
+Pass 1/4: approve, no findings. The diff equals the reviewed reference (plugin-file-attestation-policies#4) line for line, except the manifest seed (0.1.1 = releases/latest v0.1.1, ancestor of main). actionlint v1.7.12 clean; OPA 1.14.1: opa check clean, opa test 55/55, opa build policies OK; old (`opa build -b policies -o`) and shared (`opa build --bundle policies --output`) bundles byte-identical (sha256 b5f4d5f4...). Root data.json is not in the bundle before or after. README describes make build, not releasing, so unchanged.
