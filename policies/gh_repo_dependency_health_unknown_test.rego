@@ -40,18 +40,14 @@ test_skip_reason_is_only_when_dependency_health_is_unobservable if {
 }
 
 test_passes_when_health_is_collected_and_unknowns_are_violations if {
-	inp := {
-		"dependencies": [resolved_dependency],
-	}
-	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}}
+	inp := {"dependencies": [resolved_dependency]}
+	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}} # regal ignore:unresolved-reference
 	count(violations) == 0
 }
 
 test_flags_unresolved_dependency_when_configured if {
-	inp := {
-		"dependencies": [unresolved_dependency],
-	}
-	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}}
+	inp := {"dependencies": [unresolved_dependency]}
+	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}} # regal ignore:unresolved-reference
 	count(violations) == 1
 	some v in violations
 	v.id == "dependency_repository_unresolved"
@@ -63,17 +59,15 @@ test_flags_granular_dependency_without_direct_flag if {
 		"repository": {"organization": "ccf", "name": "api", "full_name": "ccf/api"},
 		"dependency": dep,
 	}
-	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}}
+	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}} # regal ignore:unresolved-reference
 	count(violations) == 1
 	some v in violations
 	v.id == "dependency_repository_unresolved"
 }
 
 test_flags_uncollected_health_when_configured if {
-	inp := {
-		"dependencies": [partial_collection_dependency],
-	}
-	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}}
+	inp := {"dependencies": [partial_collection_dependency]}
+	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}} # regal ignore:unresolved-reference
 	count(violations) == 1
 	some v in violations
 	v.id == "dependency_health_not_collected"
@@ -89,7 +83,7 @@ test_flags_uncollected_health_when_collection_status_uses_legacy_repository_reso
 		"collection_status": {"repository_resolved": true, "health_collected": false, "errors": [{"scope": "workflows", "message": "actions metadata unavailable"}]},
 	}
 	inp := {"dependencies": [dep]}
-	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}}
+	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}} # regal ignore:unresolved-reference
 	count(violations) == 1
 	some v in violations
 	v.id == "dependency_health_not_collected"
@@ -97,9 +91,7 @@ test_flags_uncollected_health_when_collection_status_uses_legacy_repository_reso
 
 test_ignores_non_direct_dependency if {
 	dep := object.union(unresolved_dependency, {"direct": false})
-	inp := {
-		"dependencies": [dep],
-	}
-	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}}
+	inp := {"dependencies": [dep]}
+	violations := {v | violation[v] with input as inp with data.dependency_health as {"unknown_health_is_violation": true}} # regal ignore:unresolved-reference
 	count(violations) == 0
 }

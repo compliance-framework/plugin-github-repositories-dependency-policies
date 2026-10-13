@@ -1,22 +1,24 @@
 package compliance_framework.dependency_sbom_available
 
-import data.ccf_libs.dependency_helpers as dependency_helpers
+import data.ccf_libs.dependency_helpers
 
 dependencies := dependency_helpers.selected_dependencies(input)
 
 default dependency_health_input := {}
 
-dependency_health_input := dependency_helpers.object_or_empty(data.dependency_health) if {
-	is_object(data.dependency_health)
+dependency_health_input := dependency_helpers.object_or_empty(data.dependency_health) if { # regal ignore:unresolved-reference
+	is_object(data.dependency_health) # regal ignore:unresolved-reference
 }
+
 require_dependency_sbom_raw := object.get(dependency_health_input, "require_dependency_sbom", false)
+
 default require_dependency_sbom := false
 
-require_dependency_sbom := true if {
+require_dependency_sbom if {
 	require_dependency_sbom_raw == true
 }
 
-require_dependency_sbom := true if {
+require_dependency_sbom if {
 	require_dependency_sbom_raw == "true"
 }
 

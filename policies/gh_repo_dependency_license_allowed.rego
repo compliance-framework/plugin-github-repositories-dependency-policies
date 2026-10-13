@@ -1,13 +1,13 @@
 package compliance_framework.dependency_license_allowed
 
-import data.ccf_libs.dependency_helpers as dependency_helpers
+import data.ccf_libs.dependency_helpers
 
 dependencies := dependency_helpers.selected_dependencies(input)
 
 default dependency_health_input := {}
 
-dependency_health_input := dependency_helpers.object_or_empty(data.dependency_health) if {
-	is_object(data.dependency_health)
+dependency_health_input := dependency_helpers.object_or_empty(data.dependency_health) if { # regal ignore:unresolved-reference
+	is_object(data.dependency_health) # regal ignore:unresolved-reference
 }
 
 default_banned_licenses := ["BUSL-1.1", "SSPL-1.0", "PolyForm-Noncommercial-1.0.0"]

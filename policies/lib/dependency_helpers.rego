@@ -31,7 +31,7 @@ input_dependency_provided(input_data) if {
 	is_object(object.get(input_data, "dependency", null))
 }
 
-direct_dependency(input_data, dep) if {
+direct_dependency(input_data, _) if {
 	input_dependency_provided(input_data)
 }
 
