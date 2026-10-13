@@ -54,10 +54,8 @@ test_flags_banned_license_when_resolved_is_legacy_alias if {
 }
 
 test_flags_license_not_in_configured_allow_list if {
-	inp := {
-		"dependencies": [mit_dependency],
-	}
-	violations := {v | violation[v] with input as inp with data.dependency_health as {"allowed_licenses": ["Apache-2.0"]}}
+	inp := {"dependencies": [mit_dependency]}
+	violations := {v | violation[v] with input as inp with data.dependency_health as {"allowed_licenses": ["Apache-2.0"]}} # regal ignore:unresolved-reference
 	count(violations) == 1
 	some v in violations
 	v.id == "dependency_license_not_allowed"

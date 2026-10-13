@@ -98,7 +98,7 @@ test_threshold_override_can_make_recent_activity_stale if {
 		"__now_ns": fixed_now_ns,
 		"dependencies": [dep],
 	}
-	violations := {v | violation[v] with input as inp with data.dependency_health as {"max_days_since_release": 1, "max_days_since_commit": 1}}
+	violations := {v | violation[v] with input as inp with data.dependency_health as {"max_days_since_release": 1, "max_days_since_commit": 1}} # regal ignore:unresolved-reference
 	count(violations) == 1
 	some v in violations
 	v.id == "dependency_activity_stale"

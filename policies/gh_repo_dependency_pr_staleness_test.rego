@@ -89,7 +89,7 @@ test_threshold_override_flags_smaller_backlog if {
 		"__now_ns": fixed_now_ns,
 		"dependencies": [dep],
 	}
-	violations := {v | violation[v] with input as inp with data.dependency_health as {"max_open_prs": 5, "max_oldest_open_pr_age_days": 10}}
+	violations := {v | violation[v] with input as inp with data.dependency_health as {"max_open_prs": 5, "max_oldest_open_pr_age_days": 10}} # regal ignore:unresolved-reference
 	count(violations) == 1
 	some v in violations
 	v.id == "dependency_open_pr_backlog_stale"

@@ -1,13 +1,13 @@
 package compliance_framework.dependency_pr_staleness
 
-import data.ccf_libs.dependency_helpers as dependency_helpers
+import data.ccf_libs.dependency_helpers
 
 dependencies := dependency_helpers.selected_dependencies(input)
 
 default dependency_health_input := {}
 
-dependency_health_input := dependency_helpers.object_or_empty(data.dependency_health) if {
-	is_object(data.dependency_health)
+dependency_health_input := dependency_helpers.object_or_empty(data.dependency_health) if { # regal ignore:unresolved-reference
+	is_object(data.dependency_health) # regal ignore:unresolved-reference
 }
 
 max_open_prs := object.get(dependency_health_input, "max_open_prs", 50)
